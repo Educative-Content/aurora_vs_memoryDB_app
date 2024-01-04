@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Combined Query Time Visualization</title>
+  <!-- Include Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="combinedQueryTimeChart" width="800" height="400"></canvas>
+
+  <script>
+    // Function to fetch data from the server for RDS and MemoryDB queries
+    async function fetchData() {
+      const responseRDS = await fetch('/rdsquery');
+      const responseMemoryDB = await fetch('/memorydbquery');
+
+      const dataRDS = await responseRDS.json();
+      const dataMemoryDB = await responseMemoryDB.json();
+
+      return { labels: dataRDS.labels, dataRDS: dataRDS.data, dataMemoryDB: dataMemoryDB.data };
+    }
+
+    // Function to create the line chart for combined queries
+    async function createCombinedChart() {
+      const data = await fetchData();
+      const ctx = document.getElementById('combinedQueryTimeChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.labels, // Array of query numbers
+          datasets: [
+            {
+              label: 'RDS Query Time',
+              data: data.dataRDS, // Array of RDS query times
+              borderColor: 'blue',
+              borderWidth: 1,
+              fill: false
+            },
+            {
+              label: 'MemoryDB Query Time',
+              data: data.dataMemoryDB, // Array of MemoryDB query times
+              borderColor: 'red',
+              borderWidth: 1,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: 'Combined Query Time Visualization'
+          },
+          scales: {
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Number of Queries'
+              }
+            }],
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Query Time (ms)'
+              }
+            }]
+          }
+        }
+      });
+    }
+
+    // Create the chart when the page is loaded
+    window.onload = createCombinedChart;
+  </script>
+</body>
+</html>
