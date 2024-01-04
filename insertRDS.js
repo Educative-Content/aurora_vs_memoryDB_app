@@ -9,7 +9,6 @@ const app = express();
 app.use(express.static(__dirname));
 
 app.use(cors());
-// const myVariable = process.env.ENDPOINT_OF_WRITER_INSTANCE;
 
 const db = mysql.createConnection({
   host: process.env.ENDPOINT_OF_WRITER_INSTANCE,
