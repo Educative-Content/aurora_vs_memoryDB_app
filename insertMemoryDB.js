@@ -27,6 +27,7 @@ async function populateMemoryDB() {
       };
 
       await redis.set(`netflix:${i}`, JSON.stringify(entry));
+      console.log(`Inserted row ${i}`);
     }
     console.log('Entries added to MemoryDB for Redis.');
   } catch (error) {
