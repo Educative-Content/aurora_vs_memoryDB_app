@@ -3,7 +3,6 @@ const faker = require('faker');
 const mysql = require('mysql');
 const path = require('path');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 app.use(express.static(__dirname));
